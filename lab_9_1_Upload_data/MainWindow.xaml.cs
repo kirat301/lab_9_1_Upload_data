@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -20,24 +20,29 @@ namespace lab_9_1_Upload_data
     public partial class MainWindow : Window
     {
         private ObservableCollection<Product> _products;
+        private ProductRepository repository;
+        private const string connectionString =
+            @"Server=(localdb)\MSSQLLocalDB;Database=ShopDB;Integrated Security=true;Encrypt=True;TrustServerCertificate=True";
+
 
         public MainWindow()
         {
             InitializeComponent();
             _products = new ObservableCollection<Product>();
             productDG.ItemsSource = _products;
+            repository = new ProductRepository(connectionString);
             LoadProducts();
         }
 
         private void btnUpdate_Click(object sender, RoutedEventArgs e)
         {
-
+            LoadProducts();
         }
         public void LoadProducts()
         {
             try
             {
-                string connectionString = @"Server=(localdb)\MSSQLLocalDB;Database=ShopDB;Integrated Security=true;Encrypt=True;TrustServerCertificate=True";
+                
                 using (var connection = new SqlConnection(connectionString))
                 {
                     connection.Open(); // открыть соединение
@@ -46,6 +51,7 @@ namespace lab_9_1_Upload_data
                                     LEFT JOIN Categories c ON p.CategoryId = c.Id
                                     ORDER BY p.Name;";
                     _products.Clear();
+
                     using (var command = new SqlCommand(sql, connection))
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
@@ -76,5 +82,100 @@ namespace lab_9_1_Upload_data
             }
             productDG.ItemsSource = _products;
         }
+
+        private void btnAdd_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var dlg = new ProductEditWindow { Owner = this };
+
+                if (dlg.ShowDialog() == true)
+                {
+                    repository.Add(dlg.Result);
+                    LoadProducts();
+                }
+            }
+            catch (SqlException ex)
+            {
+                MessageBox.Show(
+                    "Ошибка добавления товара:\n" + ex.Message,
+                    "Ошибка базы данных",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
+        }
+
+        private void btnChange_Click(object sender, RoutedEventArgs e)
+        {
+            var select = productDG.SelectedItem as Product;
+
+            if (select == null)
+            {
+                MessageBox.Show(
+                    "Выберите товар для редактирования.",
+                    "Внимание",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+                return;
+            }
+
+            try
+            {
+                var dlg = new ProductEditWindow(select) { Owner = this };
+
+                if (dlg.ShowDialog() == true)
+                {
+                    repository.Update(dlg.Result);
+                    LoadProducts();
+                }
+            }
+            catch (SqlException ex)
+            {
+                MessageBox.Show(
+                    "Ошибка изменения товара:\n" + ex.Message,
+                    "Ошибка базы данных",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
+        }
+
+        private void btnDelete_Click(object sender, RoutedEventArgs e)
+        {
+            var select = productDG.SelectedItem as Product;
+
+            if (select == null)
+            {
+                MessageBox.Show(
+                    "Выберите товар для удаления.",
+                    "Внимание",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+                return;
+            }
+
+            var answer = MessageBox.Show(
+                "Удалить товар " + select.Name + "?",
+                "Подтверждение",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question);
+
+            if (answer == MessageBoxResult.Yes)
+            {
+                try
+                {
+                    repository.Delete(select.Id);
+                    LoadProducts();
+                }
+                catch (SqlException ex)
+                {
+                    MessageBox.Show(
+                        "Ошибка удаления товара:\n" + ex.Message,
+                        "Ошибка базы данных",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                }
+            }
+        }
+
     }
 }

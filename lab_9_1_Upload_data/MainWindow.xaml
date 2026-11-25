@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:lab_9_1_Upload_data"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Товары" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -15,36 +15,58 @@
         <DataGrid x:Name="productDG"
                   FontFamily="Lucida Sans Unicode"
                   Grid.Row="0" 
-                  ItemsSource="{Binding Products}"
                   AutoGenerateColumns="False"
-                  CanUserAddRows="False">
+                  CanUserAddRows="False"
+                  IsReadOnly="True"
+                  SelectionMode="Single">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Код" 
-                                    Binding="{Binding Code}" />
-                <DataGridTextColumn Header="Название" 
-                                    Binding="{Binding Name}" />
-                <DataGridTextColumn Header="Цена, руб." 
-                                    Binding="{Binding Price}" />
-                <DataGridTextColumn Header="Кол-во" 
-                                    Binding="{Binding Quantity}" />
-                <DataGridTextColumn Header="Категория" 
-                                    Binding="{Binding Category}" />
+                <DataGridTextColumn Header="Код" Binding="{Binding Id}" />
+                <DataGridTextColumn Header="Название" Binding="{Binding Name}" />
+                <DataGridTextColumn Header="Цена, руб." Binding="{Binding Price}" />
+                <DataGridTextColumn Header="Кол-во" Binding="{Binding Quantity}" />
+                <DataGridTextColumn Header="Категория" Binding="{Binding Category}" />
             </DataGrid.Columns>
         </DataGrid>
 
-        <Button x:Name="btnUpdate"
-                Content="Обновить"
-                Width="100"
-                Height="32"
-                Margin="572,326,128,76"
-                Click="btnUpdate_Click"/>
-        <TextBlock x:Name="txtStatus"
-           Text="Загруженно записей: 0"
-           FontSize="14"
-           FontWeight="SemiBold"
-           Foreground="Darkred"
-           TextWrapping="Wrap"
-           TextAlignment="Center"
-           Margin="0,326,402,0"/>
+        <StackPanel Grid.Row="1"
+            Orientation="Horizontal"
+            Margin="10"
+            VerticalAlignment="Center">
+
+    <Button x:Name="btnAdd"
+            Content="Добавить"
+            Width="90"
+            Height="32"
+            Margin="0,0,5,0"
+            Click="btnAdd_Click"/>
+
+    <Button x:Name="btnEdit"
+            Content="Изменить"
+            Width="90"
+            Height="32"
+            Margin="0,0,5,0"
+            Click="btnChange_Click"/>
+
+    <Button x:Name="btnDelete"
+            Content="Удалить"
+            Width="90"
+            Height="32"
+            Margin="0,0,5,0"
+            Click="btnDelete_Click"/>
+
+    <Button x:Name="btnUpdate"
+            Content="Обновить"
+            Width="100"
+            Height="32"
+            Margin="0,0,15,0"
+            Click="btnUpdate_Click"/>
+
+    <TextBlock x:Name="txtStatus"
+               Text="Загружено записей: 0"
+               FontSize="14"
+               FontWeight="SemiBold"
+               Foreground="Darkred"
+               VerticalAlignment="Center"/>
+</StackPanel>
     </Grid>
 </Window>
