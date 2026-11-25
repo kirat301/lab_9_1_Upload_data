@@ -18,6 +18,7 @@ namespace lab_9_1_Upload_data
     public partial class ProductEditWindow : Window
     {
         private ProductRepository repository;
+        private int productId;
 
         public Product Result { get; set; }
 
@@ -42,6 +43,7 @@ namespace lab_9_1_Upload_data
 
             LoadCategories();
 
+            productId = product.Id;
             txtName.Text = product.Name;
             txtPrice.Text = product.Price.ToString();
             txtQuantity.Text = product.Quantity.ToString();
@@ -97,6 +99,7 @@ namespace lab_9_1_Upload_data
 
             Result = new Product();
 
+            Result.Id = productId;
             Result.Name = txtName.Text.Trim();
             Result.Price = price;
             Result.Quantity = quantity;

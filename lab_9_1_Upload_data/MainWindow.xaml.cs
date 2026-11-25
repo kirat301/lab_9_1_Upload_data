@@ -177,5 +177,42 @@ namespace lab_9_1_Upload_data
             }
         }
 
+        private void btnSearch_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string searchText = txtSearch.Text.Trim();
+
+                if (searchText == "")
+                {
+                    LoadProducts();
+                    return;
+                }
+
+                List<Product> results = repository.Search(searchText);
+
+                _products.Clear();
+
+                foreach (Product product in results)
+                {
+                    _products.Add(product);
+                }
+
+                txtStatus.Text = $"Найдено записей: {_products.Count}";
+            }
+            catch (SqlException ex)
+            {
+                MessageBox.Show(
+                    "Ошибка поиска товаров:\n" + ex.Message,
+                    "Ошибка базы данных",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
+        }
+        private void btnReset_Click(object sender, RoutedEventArgs e)
+        {
+            txtSearch.Clear();
+            LoadProducts();
+        }
     }
 }

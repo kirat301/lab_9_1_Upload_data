@@ -24,7 +24,8 @@ namespace lab_9_1_Upload_data
                 connection.Open();
 
                 string query = @"
-                    SELECT p.Id, p.Name, p.Price, p.Quantity, c.Name AS Category
+                    SELECT p.Id, p.Name, p.Price, p.Quantity,
+                        c.Name AS Category
                     FROM Products p
                     LEFT JOIN Categories c ON p.CategoryId = c.Id";
 
@@ -45,9 +46,9 @@ namespace lab_9_1_Upload_data
                     products.Add(product);
                 }
             }
-
             return products;
         }
+
 
         // Добавление товара
         public void Add(Product p)
@@ -138,6 +139,47 @@ namespace lab_9_1_Upload_data
             }
 
             return categories;
+        }
+        // Поиск товаров по названию
+        public List<Product> Search(string query)
+        {
+            List<Product> products = new List<Product>();
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string sql = @"
+                    SELECT p.Id, p.Name, p.Price, p.Quantity,
+                        c.Name AS Category
+                    FROM Products p
+                    LEFT JOIN Categories c ON p.CategoryId = c.Id
+                    WHERE p.Name LIKE @Search";
+
+                using (SqlCommand command = new SqlCommand(sql, connection))
+                {
+                    command.Parameters.AddWithValue("@Search", "%" + query + "%");
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Product product = new Product();
+
+                            product.Id = Convert.ToInt32(reader["Id"]);
+                            product.Name = reader["Name"].ToString();
+                            product.Price = Convert.ToDecimal(reader["Price"]);
+                            product.Quantity = Convert.ToInt32(reader["Quantity"]);
+                            product.Category = reader["Category"] == DBNull.Value
+                                ? ""
+                                : reader["Category"].ToString();
+
+                            products.Add(product);
+                        }
+                    }
+                }
+            }
+            return products;
         }
     }
 }

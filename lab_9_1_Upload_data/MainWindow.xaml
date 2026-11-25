@@ -5,16 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:lab_9_1_Upload_data"
         mc:Ignorable="d"
-        Title="Товары" Height="450" Width="800">
+        Title="Товары" Height="450" Width="1000">
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <DataGrid x:Name="productDG"
                   FontFamily="Lucida Sans Unicode"
-                  Grid.Row="0" 
+                  Grid.Row="1" 
                   AutoGenerateColumns="False"
                   CanUserAddRows="False"
                   IsReadOnly="True"
@@ -28,45 +29,65 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <StackPanel Grid.Row="1"
+        <StackPanel Grid.Row="2"
             Orientation="Horizontal"
             Margin="10"
             VerticalAlignment="Center">
 
-    <Button x:Name="btnAdd"
+            <Button x:Name="btnAdd"
             Content="Добавить"
             Width="90"
             Height="32"
             Margin="0,0,5,0"
             Click="btnAdd_Click"/>
 
-    <Button x:Name="btnEdit"
+            <Button x:Name="btnEdit"
             Content="Изменить"
             Width="90"
             Height="32"
             Margin="0,0,5,0"
             Click="btnChange_Click"/>
 
-    <Button x:Name="btnDelete"
+            <Button x:Name="btnDelete"
             Content="Удалить"
             Width="90"
             Height="32"
             Margin="0,0,5,0"
             Click="btnDelete_Click"/>
 
-    <Button x:Name="btnUpdate"
+            <Button x:Name="btnUpdate"
             Content="Обновить"
             Width="100"
             Height="32"
             Margin="0,0,15,0"
             Click="btnUpdate_Click"/>
 
-    <TextBlock x:Name="txtStatus"
+               <TextBlock x:Name="txtStatus"
                Text="Загружено записей: 0"
                FontSize="14"
                FontWeight="SemiBold"
                Foreground="Darkred"
                VerticalAlignment="Center"/>
-</StackPanel>
+            
+            <TextBox x:Name="txtSearch"
+             Width="220"
+             Height="28"
+             VerticalContentAlignment="Center"
+             Margin="0,0,10,0"/>
+
+            <Button x:Name="btnSearch"
+            Content="Найти"
+            Width="80"
+            Height="28"
+            Margin="0,0,5,0"
+            Click="btnSearch_Click"/>
+
+            <Button x:Name="btnReset"
+            Content="Сбросить"
+            Width="90"
+            Height="28"
+            Click="btnReset_Click"/>
+        </StackPanel>
+        
     </Grid>
 </Window>
