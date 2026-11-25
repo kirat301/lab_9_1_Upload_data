@@ -1,6 +1,8 @@
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,7 +15,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Microsoft.Data.SqlClient;
 
 namespace lab_9_1_Upload_data
 {
@@ -309,6 +310,42 @@ namespace lab_9_1_Upload_data
             var view = CollectionViewSource.GetDefaultView(_products);
             view.Filter = null;
             view.Refresh();
+        }
+
+        private void cmbSort_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (_products == null)
+                return;
+            var view = CollectionViewSource.GetDefaultView(_products);
+
+            view.SortDescriptions.Clear();
+
+            switch (cmbSort.SelectedIndex)
+            {
+                case 0:
+                    view.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
+                    break;
+
+                case 1:
+                    view.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Descending));
+                    break;
+
+                case 2:
+                    view.SortDescriptions.Add(new SortDescription("Price", ListSortDirection.Ascending));
+                    break;
+
+                case 3:
+                    view.SortDescriptions.Add(new SortDescription("Price", ListSortDirection.Descending));
+                    break;
+
+                case 4:
+                    view.SortDescriptions.Add(new SortDescription("Quantity", ListSortDirection.Ascending));
+                    break;
+
+                case 5:
+                    view.SortDescriptions.Add(new SortDescription("Category", ListSortDirection.Ascending));
+                    break;
+            }
         }
     }
 }

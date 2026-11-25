@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:lab_9_1_Upload_data"
         mc:Ignorable="d"
-        Title="Товары" Height="450" Width="1000">
+        Title="Товары" Height="450" Width="1200">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -57,39 +57,58 @@
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal"
-                    VerticalAlignment="Center">
+                     VerticalAlignment="Center">
 
                     <CheckBox x:Name="chkPrice"
-                      Content="Фильтр по цене"
-                      VerticalAlignment="Center"
-                      Margin="0,0,10,0"/>
+                          Content="Фильтр по цене"
+                          VerticalAlignment="Center"
+                        Margin="0,0,10,0"/>
 
                     <TextBlock Text="От:"
-                       VerticalAlignment="Center"/>
+                         VerticalAlignment="Center"/>
 
                     <TextBox x:Name="txtPriceFrom"
-                     Width="75"
-                     Height="25"
-                     Margin="5,0,10,0"/>
+                        Width="75"
+                        Height="25"
+                        Margin="5,0,10,0"/>
 
                     <TextBlock Text="До:"
                        VerticalAlignment="Center"/>
 
                     <TextBox x:Name="txtPriceTo"
-                     Width="75"
-                     Height="25"
-                     Margin="5,0,15,0"/>
+                        Width="75"
+                        Height="25"
+                        Margin="5,0,15,0"/>
 
                     <TextBlock Text="Категория:"
                        VerticalAlignment="Center"/>
 
                     <ComboBox x:Name="cmbCategory"
-                      Width="150"
-                      Height="27"
-                      SelectedIndex="0"
-                      Margin="5,0,15,0">
+                        Width="150"
+                        Height="27"
+                        SelectedIndex="0"
+                        Margin="5,0,15,0">
 
                         <ComboBoxItem Content="Все категории"/>
+
+                    </ComboBox>
+
+                    <TextBlock Text="Сортировать по:"
+                        VerticalAlignment="Center"
+                        Margin="5,0,5,0"/>
+
+                    <ComboBox x:Name="cmbSort"
+                        Width="170"
+                         Height="27"
+                         SelectedIndex="0"
+                         SelectionChanged="cmbSort_SelectionChanged">
+
+                        <ComboBoxItem Content="По названию (А → Я)"/>
+                        <ComboBoxItem Content="По названию (Я → А)"/>
+                        <ComboBoxItem Content="По цене (возрастание)"/>
+                        <ComboBoxItem Content="По цене (убывание)"/>
+                        <ComboBoxItem Content="По количеству (возрастание)"/>
+                        <ComboBoxItem Content="По категории"/>
 
                     </ComboBox>
 
