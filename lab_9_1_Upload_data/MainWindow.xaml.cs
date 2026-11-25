@@ -32,6 +32,7 @@ namespace lab_9_1_Upload_data
             productDG.ItemsSource = _products;
             repository = new ProductRepository(connectionString);
             LoadProducts();
+            LoadCategories();
         }
 
         private void btnUpdate_Click(object sender, RoutedEventArgs e)
@@ -209,10 +210,105 @@ namespace lab_9_1_Upload_data
                     MessageBoxImage.Error);
             }
         }
+
         private void btnReset_Click(object sender, RoutedEventArgs e)
         {
             txtSearch.Clear();
             LoadProducts();
+        }
+
+        private void LoadCategories()
+        {
+            cmbCategory.Items.Clear();
+
+            cmbCategory.Items.Add("Все категории");
+
+            List<string> categories = repository.GetCategories();
+
+            foreach (string category in categories)
+            {
+                cmbCategory.Items.Add(category);
+            }
+
+            cmbCategory.SelectedIndex = 0;
+        }
+
+        private void ApplyFilters()
+        {
+            decimal minPrice = 0;
+            decimal maxPrice = 0;
+
+            if (chkPrice.IsChecked == true)
+            {
+                if (!decimal.TryParse(txtPriceFrom.Text, out minPrice))
+                {
+                    MessageBox.Show("Введите корректную минимальную цену.",
+                        "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    txtPriceFrom.Focus();
+                    return;
+                }
+
+                if (!decimal.TryParse(txtPriceTo.Text, out maxPrice))
+                {
+                    MessageBox.Show("Введите корректную максимальную цену.",
+                        "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    txtPriceTo.Focus();
+                    return;
+                }
+
+                if (minPrice > maxPrice)
+                {
+                    MessageBox.Show(
+                        "Минимальная цена не может быть больше максимальной.",
+                        "Предупреждение",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Warning);
+                    txtPriceFrom.Focus();
+                    return;
+                }
+            }
+
+            string search = txtSearch.Text.Trim();
+            string category = cmbCategory.SelectedItem?.ToString();
+
+            var view = CollectionViewSource.GetDefaultView(_products);
+
+            view.Filter = item =>
+            {
+                Product product = item as Product;
+
+                bool nameMatch = product.Name.IndexOf(
+                    search, StringComparison.OrdinalIgnoreCase) >= 0;
+
+                bool priceMatch = chkPrice.IsChecked != true ||
+                    (product.Price >= minPrice && product.Price <= maxPrice);
+
+                bool categoryMatch = category == "Все категории" ||
+                    string.IsNullOrEmpty(category) ||
+                    product.Category == category;
+
+                return nameMatch && priceMatch && categoryMatch;
+            };
+
+            view.Refresh();
+        }
+
+        private void btnApplyFilters_Click(object sender, RoutedEventArgs e)
+        {
+            ApplyFilters();
+        }
+
+        private void btnClearFilters_Click(object sender, RoutedEventArgs e)
+        {
+            chkPrice.IsChecked = false;
+            txtPriceFrom.Clear();
+            txtPriceTo.Clear();
+            txtSearch.Clear();
+            cmbCategory.SelectedIndex = 0;
+
+            var view = CollectionViewSource.GetDefaultView(_products);
+            view.Filter = null;
+            view.Refresh();
         }
     }
 }
