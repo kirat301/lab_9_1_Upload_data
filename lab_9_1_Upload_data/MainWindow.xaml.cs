@@ -80,7 +80,7 @@ namespace lab_9_1_Upload_data
             }
             finally
             {
-                txtStatus.Text = $"Загруженно записей: {_products.Count}";
+                UpdateStatusBar();
             }
             productDG.ItemsSource = _products;
         }
@@ -200,7 +200,7 @@ namespace lab_9_1_Upload_data
                     _products.Add(product);
                 }
 
-                txtStatus.Text = $"Найдено записей: {_products.Count}";
+                UpdateStatusBar();
             }
             catch (SqlException ex)
             {
@@ -291,7 +291,7 @@ namespace lab_9_1_Upload_data
                 return nameMatch && priceMatch && categoryMatch;
             };
 
-            view.Refresh();
+            UpdateStatusBar();
         }
 
         private void btnApplyFilters_Click(object sender, RoutedEventArgs e)
@@ -346,6 +346,20 @@ namespace lab_9_1_Upload_data
                     view.SortDescriptions.Add(new SortDescription("Category", ListSortDirection.Ascending));
                     break;
             }
+        }
+
+        private void UpdateStatusBar()
+        {
+            var view = CollectionViewSource.GetDefaultView(_products);
+
+            int visible = view.Cast<Product>().Count();
+            int total = _products.Count;
+
+            decimal sum = view.Cast<Product>()
+                .Sum(p => p.Price * p.Quantity);
+
+            txtCount.Text = $"Товаров: {visible} из {total}";
+            txtTotal.Text = $"Итоговая сумма: {sum:N2} руб.";
         }
     }
 }
